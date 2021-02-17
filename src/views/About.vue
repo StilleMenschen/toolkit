@@ -1,11 +1,12 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <h1>关于</h1>
+    <p>这个人很懒,什么也没有留下...</p>
   </div>
 </template>
 
 <style lang="less">
 .about {
-  text-align: center;
+  padding: 0.5rem 1rem;
 }
 </style>

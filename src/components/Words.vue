@@ -15,12 +15,6 @@
       >
       <input type="text" :value="word" ref="content" style="height: 0" />
     </div>
-    <v-chip class="mt-1 mb-1 text--white" color="orange" v-if="hasMsg">
-      {{ msg }}
-    </v-chip>
-    <v-chip class="mt-1 mb-1 text--white" color="red" v-if="hasError">
-      {{ msg }}
-    </v-chip>
     <v-text-field
       class="mb-2"
       v-model="userKey"
@@ -60,29 +54,30 @@
       >
         复制
       </v-btn>
-      <v-btn
-        @click="clearItem"
-        :disabled="notKey"
-        color="secondary"
-        elevation="2"
-      >
+      <v-btn @click="clearItem" :disabled="notKey" color="red" elevation="2">
         删除所有记录
       </v-btn>
     </div>
-
-    <v-chip
-      style="color: white"
-      v-if="notice"
-      close
-      color="green"
-      @click:close="notice = false"
-      class="mt-2 mb-2"
-    >
-      点击列表中的文字可填充到最上方文本框中
-    </v-chip>
+    <div>
+      <v-chip
+        v-if="notice"
+        close
+        color="green"
+        @click:close="notice = false"
+        class="ma-2"
+      >
+        点击下方列表的文字可填充至上方文本框中
+      </v-chip>
+      <v-chip class="ma-2 text--white" color="orange" v-if="hasMsg">
+        {{ msg }}
+      </v-chip>
+      <v-chip class="ma-2 text--white" color="red" v-if="hasError">
+        {{ msg }}
+      </v-chip>
+    </div>
     <v-radio-group v-model="pos" column>
       <v-row v-for="(v, i) in notes" :key="v">
-        <v-col cols="8">
+        <v-col cols="7">
           <v-radio
             :key="i"
             :value="i"
@@ -91,9 +86,11 @@
             color="success"
           />
         </v-col>
-        <v-col cols="2">
-          <v-btn class="mr-2" @click="del(i)">删除</v-btn>
-          <v-btn @click="quickCopy(i)">复制</v-btn>
+        <v-col cols="3">
+          <v-btn fab small class="mr-2" @click="quickCopy(i)"
+            ><v-icon>mdi-content-copy</v-icon></v-btn
+          >
+          <v-btn fab small @click="del(i)"><v-icon>mdi-delete</v-icon></v-btn>
         </v-col>
       </v-row>
     </v-radio-group>
@@ -105,7 +102,7 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import axios, { AxiosResponse, Method } from "axios";
 
-const instance = axios.create({
+const $api = axios.create({
   baseURL: "/",
   timeout: 3000
 });
@@ -113,7 +110,7 @@ const instance = axios.create({
 @Component
 export default class Words extends Vue {
   word = "";
-  userKey = "aaa";
+  userKey = "";
   hasError = false;
   hasMsg = false;
   msg = "";
@@ -201,12 +198,12 @@ export default class Words extends Vue {
     );
   }
 
-  active(i: number) {
-    if (this.pos == i) {
+  active(index: number) {
+    if (this.pos == index) {
       this.pos = -1;
     } else {
-      this.pos = i;
-      this.word = this.notes[i];
+      this.pos = index;
+      this.word = this.notes[index];
     }
   }
 
@@ -226,8 +223,8 @@ export default class Words extends Vue {
     }, 3000);
   }
 
-  quickCopy(i: number) {
-    this.active(i);
+  quickCopy(index: number) {
+    this.active(index);
     setTimeout(() => {
       this.copy();
     }, 600);
@@ -291,7 +288,7 @@ export default class Words extends Vue {
   }
 
   api(url: string, method: Method, values: object, isCall: boolean) {
-    const p = instance.request({
+    const p = $api.request({
       url: url,
       method: method,
       params: {
