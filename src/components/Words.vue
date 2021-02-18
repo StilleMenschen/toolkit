@@ -106,7 +106,7 @@ import axios, { AxiosResponse, Method } from "axios";
 
 @Component
 export default class Words extends Vue {
-  private $api = axios.create({
+  private axiosInstance = axios.create({
     baseURL: "/",
     timeout: 3000
   });
@@ -145,9 +145,9 @@ export default class Words extends Vue {
   }
 
   get notKey() {
-    if (this.userKey && /^[a-zA-Z][a-zA-Z0-9]{0,128}$/g.test(this.userKey))
-      return false;
-    else return true;
+    return !(
+      this.userKey && /^[a-zA-Z][a-zA-Z0-9]{0,128}$/g.test(this.userKey)
+    );
   }
 
   get notWord() {
@@ -161,7 +161,6 @@ export default class Words extends Vue {
   }
 
   error(error: string) {
-    console.log(error);
     this.hasError = true;
     this.msg = error;
     this.notes = [];
@@ -184,7 +183,6 @@ export default class Words extends Vue {
       }, 3000);
     } else {
       this.notes = obj.values;
-      console.log(this.pos);
     }
   }
 
@@ -254,7 +252,6 @@ export default class Words extends Vue {
     if (this.pos != -1) {
       uri = "set";
       values.pos = "0x" + this.pos.toString(16);
-      console.log(values);
     }
     this.api("redis.php?o=" + uri, "POST", values, true);
   }
@@ -289,7 +286,7 @@ export default class Words extends Vue {
   }
 
   api(url: string, method: Method, values: object, isCall: boolean) {
-    const p = this.$api.request({
+    const p = this.axiosInstance.request({
       url: url,
       method: method,
       params: {
