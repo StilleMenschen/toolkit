@@ -87,10 +87,12 @@
           />
         </v-col>
         <v-col cols="3">
-          <v-btn fab small class="mr-2" @click="quickCopy(i)"
-            ><v-icon>mdi-content-copy</v-icon></v-btn
-          >
-          <v-btn fab small @click="del(i)"><v-icon>mdi-delete</v-icon></v-btn>
+          <v-btn fab small class="mr-2" @click="quickCopy(i)">
+            <v-icon>mdi-content-copy</v-icon>
+          </v-btn>
+          <v-btn fab small @click="del(i)">
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
         </v-col>
       </v-row>
     </v-radio-group>
@@ -102,13 +104,12 @@ import Vue from "vue";
 import Component from "vue-class-component";
 import axios, { AxiosResponse, Method } from "axios";
 
-const $api = axios.create({
-  baseURL: "/",
-  timeout: 3000
-});
-
 @Component
 export default class Words extends Vue {
+  private $api = axios.create({
+    baseURL: "/",
+    timeout: 3000
+  });
   word = "";
   userKey = "";
   hasError = false;
@@ -288,7 +289,7 @@ export default class Words extends Vue {
   }
 
   api(url: string, method: Method, values: object, isCall: boolean) {
-    const p = $api.request({
+    const p = this.$api.request({
       url: url,
       method: method,
       params: {
