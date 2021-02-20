@@ -22,6 +22,11 @@ const routes: Array<RouteConfig> = [
     path: "/words",
     name: "Words",
     component: () => import("@/components/Words.vue")
+  },
+  {
+    path: "/timer",
+    name: "Timer",
+    component: () => import("@/components/Timer.vue")
   }
 ];
 

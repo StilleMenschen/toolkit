@@ -51,6 +51,7 @@ export default class App extends Vue {
   items: Array<NavItem> = [
     { title: "主页", icon: "mdi-home", link: "" },
     { title: "字符串", icon: "mdi-file-word-box", link: "words" },
+    { title: "时间计算", icon: "mdi-file-word-box", link: "timer" },
     { title: "关于", icon: "mdi-help-box", link: "about" }
   ];
 
