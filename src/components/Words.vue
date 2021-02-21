@@ -7,9 +7,9 @@
         clearable
         no-resize
         @click:clear="clearText"
-        color="green"
+        color="orange"
       ></v-textarea>
-      <label class="green--text" @click="warps" title="点击清除所有空格">
+      <label class="orange--text" @click="warps" title="点击清除所有空格">
         ASCII字符长度 {{ word.length }}, 非ASCII字符长度
         {{ getStringRealLength }}</label
       >
@@ -24,7 +24,7 @@
       clearable
       @click:clear="clearKey"
       required
-      color="green"
+      color="orange"
     ></v-text-field>
     <div>
       <v-btn
@@ -55,14 +55,14 @@
         复制
       </v-btn>
       <v-btn @click="clearItem" :disabled="notKey" color="red" elevation="2">
-        删除所有记录
+        删除所有
       </v-btn>
     </div>
     <div>
       <v-chip
         v-if="notice"
         close
-        color="green"
+        color="orange"
         @click:close="notice = false"
         class="ma-2"
       >

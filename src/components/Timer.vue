@@ -17,8 +17,8 @@
       <input type="checkbox" @change="calculate" v-model="v.checked" />
       {{ v.description }} </label
     ><v-spacer />
-    <v-btn @click="resetCalculate" class="mr-1">重置到当前时间</v-btn>
-    <v-btn @click="calculate">计算间隔</v-btn>
+    <v-btn color="orange" class="mr-1" @click="calculate">计算间隔</v-btn>
+    <v-btn @click="resetCalculate">重置到当前时间</v-btn>
     <v-spacer />
     时间间隔为
     <span v-for="v in calculateRange" :key="v.id * 10" v-show="v.checked">
@@ -75,8 +75,8 @@
       v-model="calculationRange.anSeconds"
     />秒
     <v-spacer />
-    <v-btn @click="resetCalculation" class="mr-1">重置到当前时间</v-btn>
-    <v-btn @click="calculation">计算时间</v-btn>
+    <v-btn color="orange" class="mr-1" @click="calculation">计算时间</v-btn>
+    <v-btn @click="resetCalculation">重置到当前时间</v-btn>
     <v-spacer />
     计算结果：{{ resultDateTime | dateTimeFormatter }}
   </div>

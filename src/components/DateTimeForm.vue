@@ -19,11 +19,7 @@
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker
-          v-model="date"
-          color="green lighten-1"
-          @input="dateChange"
-        />
+        <v-date-picker v-model="date" color="orange" @input="dateChange" />
       </v-menu>
     </v-col>
     <v-col cols="6">
@@ -54,7 +50,7 @@
           full-width
           use-seconds
           format="24hr"
-          color="green lighten-1"
+          color="orange"
           @click:second="$refs.menu.save(time)"
           @input="joinDateTime"
         ></v-time-picker>
