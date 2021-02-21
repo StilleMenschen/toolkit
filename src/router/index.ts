@@ -26,7 +26,7 @@ const routes: Array<RouteConfig> = [
   {
     path: "/timer",
     name: "Timer",
-    component: () => import("@/components/Timer.vue")
+    component: () => import("@/views/Timer.vue")
   }
 ];
 

@@ -15,8 +15,7 @@
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          :href="joinPath(item.link)"
-          link
+          @click="jump(item.routeName)"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -43,20 +42,24 @@ import Component from "vue-class-component";
 interface NavItem {
   title: string;
   icon: string;
-  link: string;
+  routeName: string;
 }
 
 @Component
 export default class App extends Vue {
   items: Array<NavItem> = [
-    { title: "主页", icon: "mdi-home", link: "" },
-    { title: "字符串", icon: "mdi-file-word-box", link: "words" },
-    { title: "时间计算", icon: "mdi-timer-sand-full", link: "timer" },
-    { title: "关于", icon: "mdi-help-box", link: "about" }
+    { title: "主页", icon: "mdi-home", routeName: "Home" },
+    { title: "字符串", icon: "mdi-file-word-box", routeName: "Words" },
+    { title: "时间计算", icon: "mdi-timer-sand-full", routeName: "Timer" },
+    { title: "关于", icon: "mdi-help-box", routeName: "About" }
   ];
 
-  joinPath(uri: string): string {
-    return process.env.BASE_URL + uri;
+  jump(routeName: string) {
+    if (this.$route.name == routeName) return false;
+    else {
+      this.$router.push({ name: routeName });
+      return true;
+    }
   }
 
   created() {

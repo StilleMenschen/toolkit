@@ -1,19 +1,18 @@
 <template>
-  <div class="timer">
+  <div class="time-interval">
     <h2>时间间隔</h2>
     <v-spacer />
     <v-row>
       <v-col cols="8">
-        <date-time-form label-prefix="开始" @calc="setStart" />
+        <date-time-form label-prefix="开始" dateTime="start" />
       </v-col>
     </v-row>
     <v-spacer />
     <v-row>
       <v-col cols="8">
-        <date-time-form label-prefix="结束" @calc="setEnd" />
+        <date-time-form label-prefix="结束" dateTime="end" />
       </v-col> </v-row
-    ><v-spacer />
-    <label v-for="v in calculateRange" :key="v.id">
+    ><v-spacer /> 统计类型：<label v-for="v in calculateRange" :key="v.id">
       <input type="checkbox" @change="calculate" v-model="v.checked" />
       {{ v.description }} </label
     ><v-spacer />
@@ -24,67 +23,13 @@
     <span v-for="v in calculateRange" :key="v.id * 10" v-show="v.checked">
       {{ v.value }}{{ v.description }}
     </span>
-    <v-spacer />
-    <h2>加减时间</h2>
-    <v-row>
-      <v-col cols="8">
-        <date-time-form @calc="setParamDateTime" />
-      </v-col>
-    </v-row>
-    <v-spacer />
-    计算方式：
-    <label
-      ><input
-        type="radio"
-        name="calculationType"
-        value="byAdd"
-        v-model="calculationType"
-      />添加</label
-    >
-    <label
-      ><input
-        type="radio"
-        name="calculationType"
-        value="byMinus"
-        v-model="calculationType"
-      />减去</label
-    >
-    <v-spacer />
-    <input
-      type="number"
-      class="miniInput"
-      min="0"
-      v-model="calculationRange.anDays"
-    />天
-    <input
-      type="number"
-      class="miniInput"
-      min="0"
-      v-model="calculationRange.anHours"
-    />时
-    <input
-      type="number"
-      class="miniInput"
-      min="0"
-      v-model="calculationRange.anMinutes"
-    />分
-    <input
-      type="number"
-      class="miniInput"
-      min="0"
-      v-model="calculationRange.anSeconds"
-    />秒
-    <v-spacer />
-    <v-btn color="orange" class="mr-1" @click="calculation">计算时间</v-btn>
-    <v-btn @click="resetCalculation">重置到当前时间</v-btn>
-    <v-spacer />
-    计算结果：{{ resultDateTime | dateTimeFormatter }}
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
 import DateTimeForm from "@/components/DateTimeForm.vue";
+import dateTimeFormatter from "@/utils/dateTimeFilter";
 
 interface TempRange {
   cache: number;
@@ -96,7 +41,7 @@ interface Range {
   id: number;
   description: string;
   millisecond: number;
-  value: number;
+  value: number | string;
   checked: boolean;
 }
 
@@ -105,26 +50,13 @@ interface Range {
     DateTimeForm
   },
   filters: {
-    dateTimeFormatter(value: Date) {
-      if (!value || Object.prototype.toString.call(value) !== "[object Date]")
-        return "1970-01-01 00:00:00";
-      const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
-      return `${now.slice(0, 10)} ${now.slice(11, 19)}`;
-    }
+    dateTimeFormatter
   }
 })
-export default class Timer extends Vue {
+export default class TimeInterval extends Vue {
   start = "";
   end = "";
-  paramDateTime = "";
-  resultDateTime = new Date();
-  calculationType = "byAdd";
-  calculationRange: { [key: string]: number } = {
-    anDays: 0,
-    anHours: 0,
-    anMinutes: 0,
-    anSeconds: 0
-  };
+
   calculateRange: { [key: string]: Range } = {
     days: {
       id: 1,
@@ -161,21 +93,9 @@ export default class Timer extends Vue {
     key: ""
   };
 
-  currentDateTime() {
+  currentDateTime(): string {
     const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
     return `${now.slice(0, 10)} ${now.slice(11, 19)}`;
-  }
-
-  setParamDateTime(value: string) {
-    this.paramDateTime = value;
-  }
-
-  setStart(value: string) {
-    this.start = value;
-  }
-
-  setEnd(value: string) {
-    this.end = value;
   }
 
   calculateOfValue(
@@ -183,10 +103,9 @@ export default class Timer extends Vue {
     divisor: number,
     key: string,
     fixed?: boolean
-  ) {
+  ): number {
     if (fixed) {
-      const result = base / divisor;
-      this.calculateRange[key].value = parseFloat(result.toFixed(2));
+      this.calculateRange[key].value = Number(base / divisor).toFixed(2);
       return 0;
     } else {
       if (Math.abs(base) < divisor) {
@@ -203,7 +122,7 @@ export default class Timer extends Vue {
     console.log("calculate ->", this.start, this.end);
     const tempStart = new Date(this.start).getTime();
     const tempEnd = new Date(this.end).getTime();
-    let v: any = tempEnd - tempStart;
+    let v = tempEnd - tempStart;
     if (Math.abs(v) < 1000) {
       return false;
     }
@@ -222,19 +141,6 @@ export default class Timer extends Vue {
     }
   }
 
-  calculation() {
-    const { anDays, anHours, anMinutes, anSeconds } = this.calculationRange;
-    const type = this.calculationType == "byAdd" ? 1 : -1;
-    const result =
-      type *
-      (anDays * 86400000 +
-        anHours * 3600000 +
-        anMinutes * 60000 +
-        anSeconds * 1000);
-    const param = new Date(this.paramDateTime);
-    this.resultDateTime = new Date(param.getTime() + result);
-  }
-
   resetCalculate() {
     this.start = new Date().toISOString().slice(0, 10);
     this.end = new Date().toISOString().slice(0, 10);
@@ -243,24 +149,9 @@ export default class Timer extends Vue {
     }
   }
 
-  resetCalculation() {
-    this.paramDateTime = "";
-    this.resultDateTime = new Date();
-    for (const key in this.calculationRange) {
-      this.calculationRange[key] = 0;
-    }
-  }
-
   created() {
     this.start = this.currentDateTime();
     this.end = this.currentDateTime();
-    this.paramDateTime = this.currentDateTime();
   }
 }
 </script>
-
-<style lang="less">
-.timer {
-  padding: 0.5rem 1rem;
-}
-</style>

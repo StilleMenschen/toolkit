@@ -19,7 +19,11 @@
             v-on="on"
           ></v-text-field>
         </template>
-        <v-date-picker v-model="date" color="orange" @input="dateChange" />
+        <v-date-picker
+          v-model="date"
+          color="orange"
+          @input="menuOfDate = false"
+        />
       </v-menu>
     </v-col>
     <v-col cols="6">
@@ -60,25 +64,27 @@
 </template>
 
 <script>
-import { Vue, Component, Prop, Emit } from "vue-property-decorator";
+import { Vue, Component, Prop, PropSync, Watch } from "vue-property-decorator";
 
 @Component
 export default class DateTimeForm extends Vue {
   @Prop({ type: String, default: "" }) labelPrefix;
-
+  @PropSync("value", { type: String }) dateTime;
   menuOfDate = false;
   menuOfTime = false;
   date = "";
   time = "";
 
-  @Emit("calc")
   joinDateTime() {
     return `${this.date} ${this.time}`;
   }
 
-  dateChange() {
-    this.menuOfDate = false;
-    this.joinDateTime();
+  @Watch("date") onDateChange() {
+    this.dateTime = this.joinDateTime();
+  }
+
+  @Watch("time") onTimeChange() {
+    this.dateTime = this.joinDateTime();
   }
 
   created() {
