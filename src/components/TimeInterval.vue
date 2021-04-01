@@ -119,7 +119,6 @@ export default class TimeInterval extends Vue {
   }
 
   calculate() {
-    console.log("calculate ->", this.start, this.end);
     const tempStart = new Date(this.start).getTime();
     const tempEnd = new Date(this.end).getTime();
     let v = tempEnd - tempStart;
