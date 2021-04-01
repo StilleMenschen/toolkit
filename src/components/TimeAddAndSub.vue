@@ -61,6 +61,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import DateTimeForm from "@/components/DateTimeForm.vue";
 import dateTimeFormatter from "@/utils/dateTimeFilter";
+import currentDateTime from "@/utils/currentDateTime";
 
 @Component({
   components: {
@@ -80,6 +81,7 @@ export default class TimeAddAndSub extends Vue {
     anMinutes: 0,
     anSeconds: 0
   };
+
   calculation() {
     const { anDays, anHours, anMinutes, anSeconds } = this.calculationRange;
     const type = this.calculationType == "byAdd" ? 1 : -1;
@@ -92,16 +94,17 @@ export default class TimeAddAndSub extends Vue {
     const param = new Date(this.paramDateTime);
     this.resultDateTime = new Date(param.getTime() + result);
   }
+
   resetCalculation() {
-    this.paramDateTime = "";
+    this.paramDateTime = currentDateTime();
     this.resultDateTime = new Date();
     for (const key in this.calculationRange) {
       this.calculationRange[key] = 0;
     }
   }
-  currentDateTime() {
-    const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
-    return `${now.slice(0, 10)} ${now.slice(11, 19)}`;
+
+  created() {
+    this.paramDateTime = currentDateTime();
   }
 }
 </script>

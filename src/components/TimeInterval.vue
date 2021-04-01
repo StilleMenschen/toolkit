@@ -11,11 +11,14 @@
     <v-row>
       <v-col cols="8">
         <date-time-form label-prefix="结束" :value.sync="end" />
-      </v-col> </v-row
-    ><v-spacer /> 统计类型：<label v-for="v in calculateRange" :key="v.id">
+      </v-col>
+    </v-row>
+    <v-spacer />
+    统计类型：<label v-for="v in calculateRange" :key="v.id">
       <input type="checkbox" @change="calculate" v-model="v.checked" />
-      {{ v.description }} </label
-    ><v-spacer />
+      {{ v.description }}
+    </label>
+    <v-spacer />
     <v-btn color="orange" class="mr-1" @click="calculate">计算间隔</v-btn>
     <v-btn @click="resetCalculate">重置到当前时间</v-btn>
     <v-spacer />
@@ -30,6 +33,7 @@
 import { Vue, Component } from "vue-property-decorator";
 import DateTimeForm from "@/components/DateTimeForm.vue";
 import dateTimeFormatter from "@/utils/dateTimeFilter";
+import currentDateTime from "@/utils/currentDateTime";
 
 interface TempRange {
   cache: number;
@@ -93,11 +97,6 @@ export default class TimeInterval extends Vue {
     key: ""
   };
 
-  currentDateTime(): string {
-    const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
-    return `${now.slice(0, 10)} ${now.slice(11, 19)}`;
-  }
-
   calculateOfValue(
     base: number,
     divisor: number,
@@ -141,11 +140,16 @@ export default class TimeInterval extends Vue {
   }
 
   resetCalculate() {
-    this.start = new Date().toISOString().slice(0, 10);
-    this.end = new Date().toISOString().slice(0, 10);
+    this.start = currentDateTime();
+    this.end = currentDateTime();
     for (const key in this.calculateRange) {
       this.calculateRange[key].value = 0;
     }
+  }
+
+  created() {
+    this.start = currentDateTime();
+    this.end = currentDateTime();
   }
 }
 </script>
