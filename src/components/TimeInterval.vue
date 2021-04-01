@@ -4,13 +4,13 @@
     <v-spacer />
     <v-row>
       <v-col cols="8">
-        <date-time-form label-prefix="开始" dateTime="start" />
+        <date-time-form label-prefix="开始" :value.sync="start" />
       </v-col>
     </v-row>
     <v-spacer />
     <v-row>
       <v-col cols="8">
-        <date-time-form label-prefix="结束" dateTime="end" />
+        <date-time-form label-prefix="结束" :value.sync="end" />
       </v-col> </v-row
     ><v-spacer /> 统计类型：<label v-for="v in calculateRange" :key="v.id">
       <input type="checkbox" @change="calculate" v-model="v.checked" />
@@ -146,11 +146,6 @@ export default class TimeInterval extends Vue {
     for (const key in this.calculateRange) {
       this.calculateRange[key].value = 0;
     }
-  }
-
-  created() {
-    this.start = this.currentDateTime();
-    this.end = this.currentDateTime();
   }
 }
 </script>

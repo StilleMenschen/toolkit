@@ -88,9 +88,11 @@ export default class DateTimeForm extends Vue {
   }
 
   created() {
-    const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
-    this.date = now.slice(0, 10);
-    this.time = now.slice(11, 19);
+    if (!this.dateTime || this.dateTime.length <= 0) {
+      const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
+      this.date = now.slice(0, 10);
+      this.time = now.slice(11, 19);
+    }
   }
 }
 </script>

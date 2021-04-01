@@ -3,7 +3,7 @@
     <h2>加减时间</h2>
     <v-row>
       <v-col cols="8">
-        <date-time-form dateTime="paramDateTime" />
+        <date-time-form :value.sync="paramDateTime" />
       </v-col>
     </v-row>
     <v-spacer />
@@ -102,9 +102,6 @@ export default class TimeAddAndSub extends Vue {
   currentDateTime() {
     const now = new Date(+new Date() + 8 * 60 * 60 * 1000).toISOString();
     return `${now.slice(0, 10)} ${now.slice(11, 19)}`;
-  }
-  created() {
-    this.paramDateTime = this.currentDateTime();
   }
 }
 </script>
