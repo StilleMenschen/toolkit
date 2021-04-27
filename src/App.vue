@@ -15,7 +15,7 @@
         <v-list-item
           v-for="item in items"
           :key="item.title"
-          @click="jump(item.routeName)"
+          @click="redirect(item.routeName)"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -54,7 +54,7 @@ export default class App extends Vue {
     { title: "关于", icon: "mdi-help-box", routeName: "About" }
   ];
 
-  jump(routeName: string) {
+  redirect(routeName: string) {
     if (this.$route.name == routeName) return false;
     else {
       this.$router.push({ name: routeName });
